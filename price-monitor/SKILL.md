@@ -4,7 +4,14 @@ description: Monitors product prices across e-commerce sites daily, detects pric
 version: 1.0.0
 tags: [python, scraping, automation, excel, email, selenium, pandas]
 author: neo1307
-requires: [python3, selenium, pandas, openpyxl, smtplib]
+requires: [python3, selenium, webdriver-manager, pandas, openpyxl]
+env:
+  - SMTP_HOST: SMTP server hostname (e.g. smtp.gmail.com)
+  - SMTP_PORT: SMTP port number (default 587)
+  - SMTP_USER: Sender email address
+  - SMTP_PASS: Email password or app-specific password
+  - REPORT_RECIPIENT: Recipient email address for daily reports
+runtime: chromium or chrome must be installed for Selenium headless mode
 ---
 
 # Price Monitor & Daily Excel Report Bot

@@ -4,7 +4,11 @@ description: Connects multiple REST APIs, fetches and transforms data, and pushe
 version: 1.0.0
 tags: [python, api, automation, google-sheets, pipeline, dashboard, data, fastapi]
 author: neo1307
-requires: [python3, requests, pandas, gspread, google-auth]
+requires: [python3, requests, pandas, gspread, google-auth-oauthlib]
+env:
+  - GOOGLE_SERVICE_ACCOUNT_JSON: Google Service Account key as JSON string
+  - TARGET_SHEET_ID: Google Sheets document ID (from the URL)
+  - API_KEY_1..N: One secret per connected API (naming convention: SERVICE_API_KEY)
 ---
 
 # Multi-API Data Pipeline to Google Sheets

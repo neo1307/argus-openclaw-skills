@@ -4,7 +4,10 @@ description: Extracts verified B2B leads (name, email, company, LinkedIn, job ti
 version: 1.0.0
 tags: [python, scraping, lead-generation, b2b, linkedin, csv, crm, automation]
 author: neo1307
-requires: [python3, selenium, pandas, requests]
+requires: [python3, selenium, webdriver-manager, pandas, requests]
+env:
+  - LI_SESSION: LinkedIn session cookie (li_at value from browser)
+runtime: chromium or chrome must be installed for Selenium headless mode
 ---
 
 # B2B Lead Generation Scraper
