@@ -2,9 +2,8 @@ services:
   - type: web
     name: argus-agent-api
     runtime: python
-    rootDir: api
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: cd api && uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: ARGUS_API_KEY
         generateValue: true
