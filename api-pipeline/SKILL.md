@@ -1,14 +1,10 @@
 ---
 name: Multi-API Data Pipeline to Google Sheets
 description: Connects multiple REST APIs, fetches and transforms data, and pushes it to a live Google Sheets dashboard that auto-updates on a schedule.
-version: 1.0.0
-tags: [python, api, automation, google-sheets, pipeline, dashboard, data, fastapi]
+version: 1.0.2
+tags: [python, api, automation, google-sheets, pipeline, dashboard, data]
 author: neo1307
 requires: [python3, requests, pandas, gspread, google-auth-oauthlib]
-env:
-  - GOOGLE_SERVICE_ACCOUNT_JSON: Google Service Account key as JSON string
-  - TARGET_SHEET_ID: Google Sheets document ID (from the URL)
-  - API_KEY_1..N: One secret per connected API (naming convention: SERVICE_API_KEY)
 ---
 
 # Multi-API Data Pipeline to Google Sheets
@@ -24,18 +20,24 @@ Replaces hours of manual copy-paste work.
 - Handles authentication: API keys, Bearer tokens, OAuth2
 - Transforms and merges data across sources
 - Pushes clean, formatted data to Google Sheets in real time
-- Sends Slack/email alert if any API call fails
+- Sends alert if any API call fails
 - Logs all pipeline runs with success/failure status
 
+## Required Environment Variables
+Set these in OpenClaw's Secrets manager before running:
+
+| Variable | Description |
+|----------|-------------|
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | Google Service Account key (full JSON string) |
+| `TARGET_SHEET_ID` | Google Sheets document ID (from the sheet URL) |
+| `[SERVICE]_API_KEY` | One secret per connected API, e.g. `SHOPIFY_API_KEY`, `HUBSPOT_TOKEN` |
+
 ## Setup
-1. Define API sources in OpenClaw chat or `config/apis.json`:
-   - endpoint URL, auth type, auth credentials, fields to extract
-2. Set OpenClaw secrets:
-   - `GOOGLE_SERVICE_ACCOUNT_JSON` — Google Service Account key (JSON string)
-   - `TARGET_SHEET_ID` — Google Sheets document ID
-   - One secret per API key: e.g. `SHOPIFY_API_KEY`, `HUBSPOT_TOKEN`
-3. Define target sheet tab names and column mappings
-4. Set update schedule: `every 15 minutes` / `hourly` / `daily at 06:00`
+1. Create a Google Service Account, download the JSON key, paste it as `GOOGLE_SERVICE_ACCOUNT_JSON`
+2. Share your target Google Sheet with the service account email
+3. Set `TARGET_SHEET_ID` from the sheet URL
+4. Add one secret per API you want to connect
+5. Set update schedule: `every 15 minutes` / `hourly` / `daily at 06:00`
 
 ## Usage
 > "Connect Shopify and HubSpot APIs and sync sales data to my Google Sheet every hour"
@@ -46,15 +48,11 @@ Replaces hours of manual copy-paste work.
 ## Output
 - Live Google Sheets dashboard with latest data
 - Pipeline run log: `logs/pipeline_YYYY-MM-DD.txt`
-- Slack/email alert on failure with error details
+- Alert on failure with error details
 
 ## Rules
 - Never store raw API credentials in output files or logs
-- Always validate API response schema before writing to Sheets (fail loudly if schema changed)
+- Always validate API response schema before writing to Sheets
 - If Google Sheets write fails, buffer data locally and retry up to 3 times
 - Respect API rate limits — add delays per API documentation
 - Each pipeline run must write a summary row to a `_run_log` tab in the Sheet
-
-## Pricing (MeshCore)
-- Free tier: 2 API sources, updates every 60 minutes
-- Pro tier: up to 10 APIs, updates every 15 minutes ($0.05/call)

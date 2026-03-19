@@ -1,17 +1,10 @@
 ---
 name: Price Monitor & Daily Excel Report Bot
 description: Monitors product prices across e-commerce sites daily, detects price drops, and emails a formatted Excel report automatically every morning.
-version: 1.0.0
+version: 1.0.2
 tags: [python, scraping, automation, excel, email, selenium, pandas]
 author: neo1307
-requires: [python3, selenium, webdriver-manager, pandas, openpyxl]
-env:
-  - SMTP_HOST: SMTP server hostname (e.g. smtp.gmail.com)
-  - SMTP_PORT: SMTP port number (default 587)
-  - SMTP_USER: Sender email address
-  - SMTP_PASS: Email password or app-specific password
-  - REPORT_RECIPIENT: Recipient email address for daily reports
-runtime: chromium or chrome must be installed for Selenium headless mode
+requires: [python3, selenium, webdriver-manager, pandas, openpyxl, chromium]
 ---
 
 # Price Monitor & Daily Excel Report Bot
@@ -28,15 +21,22 @@ Saves 3+ hours of manual work per day.
 - Emails formatted report to specified recipients on schedule
 - Logs all runs with timestamps for auditing
 
+## Required Environment Variables
+Set these in OpenClaw's Secrets manager before running:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `SMTP_HOST` | SMTP server hostname | `smtp.gmail.com` |
+| `SMTP_PORT` | SMTP port number | `587` |
+| `SMTP_USER` | Sender email address | `bot@gmail.com` |
+| `SMTP_PASS` | Email password or app-specific password | `xxxx xxxx xxxx xxxx` |
+| `REPORT_RECIPIENT` | Where to send the daily report | `manager@company.com` |
+
 ## Setup
 1. Add target product URLs to `config/urls.txt` (one URL per line)
-2. Configure OpenClaw secrets:
-   - `SMTP_HOST` — your SMTP server (e.g. smtp.gmail.com)
-   - `SMTP_PORT` — usually 587
-   - `SMTP_USER` — sender email address
-   - `SMTP_PASS` — email password or app password
-   - `REPORT_RECIPIENT` — where to send the report
+2. Set all environment variables above in OpenClaw Secrets
 3. Set run schedule in OpenClaw: `daily at 08:00`
+4. Chromium must be available on the host for Selenium headless mode
 
 ## Usage
 > "Start monitoring prices for these URLs and email me a report every morning"

@@ -1,13 +1,10 @@
 ---
 name: B2B Lead Generation Scraper
 description: Extracts verified B2B leads (name, email, company, LinkedIn, job title) from target sources and exports them as CRM-ready CSV files.
-version: 1.0.0
+version: 1.0.2
 tags: [python, scraping, lead-generation, b2b, linkedin, csv, crm, automation]
 author: neo1307
-requires: [python3, selenium, webdriver-manager, pandas, requests]
-env:
-  - LI_SESSION: LinkedIn session cookie (li_at value from browser)
-runtime: chromium or chrome must be installed for Selenium headless mode
+requires: [python3, selenium, webdriver-manager, pandas, requests, chromium]
 ---
 
 # B2B Lead Generation Scraper
@@ -24,15 +21,18 @@ leads per run depending on target criteria.
 - Outputs clean CSV ready for HubSpot, Salesforce, Pipedrive import
 - Validates and removes junk/incomplete rows before delivery
 
+## Required Environment Variables
+Set these in OpenClaw's Secrets manager before running:
+
+| Variable | Description |
+|----------|-------------|
+| `LI_SESSION` | LinkedIn session cookie (`li_at` value from your browser) |
+
 ## Setup
-1. Define target criteria in OpenClaw chat or `config/target.json`:
-   - `industry`: e.g. "SaaS", "Real Estate", "Healthcare"
-   - `job_titles`: e.g. ["CEO", "Head of Marketing", "VP Sales"]
-   - `location`: e.g. "United States", "London"
-   - `company_size`: e.g. "10-50", "50-200"
-2. Set OpenClaw secrets:
-   - `LI_SESSION` — LinkedIn session cookie (li_at)
-3. Specify output path or let default to `data/leads/`
+1. Log into LinkedIn in your browser, copy the `li_at` cookie value
+2. Set `LI_SESSION` in OpenClaw Secrets
+3. Define target criteria in OpenClaw chat (industry, job title, location, company size)
+4. Chromium must be available on the host for Selenium headless mode
 
 ## Usage
 > "Find 500 B2B leads: SaaS CEOs in the United States"
@@ -51,7 +51,3 @@ leads per run depending on target criteria.
 - Mark rows with missing email as `email_status: not_found` — do not fabricate
 - Save raw data before cleaning in `data/raw/`
 - Output CSV must be UTF-8 encoded for CRM compatibility
-
-## Pricing (MeshCore)
-- Free tier: up to 50 leads per run
-- Pro tier: up to 2,000 leads per run ($0.05/call)
